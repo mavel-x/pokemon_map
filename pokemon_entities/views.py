@@ -1,5 +1,6 @@
 import folium
 
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
 
@@ -30,8 +31,8 @@ def add_pokemon(folium_map, lat, lon, image_url=DEFAULT_IMAGE_URL):
 def show_all_pokemons(request):
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
     for entity in PokemonEntity.objects.filter(
-            appeared_at__lte=timezone.localtime(),
-            disappeared_at__gt=timezone.localtime(),
+            Q(appeared_at__lte=timezone.localtime()),
+            Q(disappeared_at__gt=timezone.localtime()) | Q(disappeared_at__isnull=True)
     ):
         add_pokemon(
             folium_map, entity.latitude,
@@ -58,8 +59,8 @@ def show_pokemon(request, pokemon_id):
 
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
     for pokemon_entity in requested_pokemon.pokemonentity_set.filter(
-            appeared_at__lte=timezone.localtime(),
-            disappeared_at__gt=timezone.localtime(),
+            Q(appeared_at__lte=timezone.localtime()),
+            Q(disappeared_at__gt=timezone.localtime()) | Q(disappeared_at__isnull=True)
     ):
         add_pokemon(
             folium_map, pokemon_entity.latitude,
