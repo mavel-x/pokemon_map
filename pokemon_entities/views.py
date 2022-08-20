@@ -76,11 +76,22 @@ def show_pokemon(request, pokemon_id):
         "img_url": request.build_absolute_uri(requested_pokemon.image.url),
     }
     if requested_pokemon.evolves_from:
+        previous_evolution = requested_pokemon.evolves_from
         pokemon.update({
             "previous_evolution": {
-                "title_ru": requested_pokemon.evolves_from.title,
-                "pokemon_id": requested_pokemon.evolves_from.id,
-                "img_url": request.build_absolute_uri(requested_pokemon.evolves_from.image.url)
+                "title_ru": previous_evolution.title,
+                "pokemon_id": previous_evolution.id,
+                "img_url": request.build_absolute_uri(previous_evolution.image.url)
+            }
+        })
+    evolves_to = Pokemon.objects.filter(evolves_from=requested_pokemon)
+    if evolves_to:
+        next_evolution = evolves_to.first()
+        pokemon.update({
+            "next_evolution": {
+                "title_ru": next_evolution.title,
+                "pokemon_id": next_evolution.id,
+                "img_url": request.build_absolute_uri(next_evolution.image.url)
             }
         })
 
