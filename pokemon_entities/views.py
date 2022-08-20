@@ -3,6 +3,8 @@ import json
 
 from django.http import HttpResponseNotFound
 from django.shortcuts import render
+from django.utils import timezone
+
 from .models import Pokemon, PokemonEntity
 
 
@@ -33,14 +35,14 @@ def show_all_pokemons(request):
         add_pokemon(
             folium_map, entity.latitude,
             entity.longitude,
-            request.build_absolute_uri(entity.pokemon.image.url) if entity.pokemon.image else None,
+            request.build_absolute_uri(entity.pokemon.image.url) if entity.pokemon.image else DEFAULT_IMAGE_URL,
         )
 
     pokemons_on_page = []
     for pokemon in Pokemon.objects.all():
         pokemons_on_page.append({
             'pokemon_id': pokemon.id,
-            'img_url': request.build_absolute_uri(pokemon.image.url) if pokemon.image else None,
+            'img_url': request.build_absolute_uri(pokemon.image.url) if pokemon.image else DEFAULT_IMAGE_URL,
             'title_ru': pokemon.title,
         })
 
