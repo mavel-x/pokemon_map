@@ -37,14 +37,16 @@ def show_all_pokemons(request):
         add_pokemon(
             folium_map, entity.latitude,
             entity.longitude,
-            request.build_absolute_uri(entity.pokemon.image.url) if entity.pokemon.image else DEFAULT_IMAGE_URL,
+            request.build_absolute_uri(entity.pokemon.image.url) if entity.pokemon.image
+            else DEFAULT_IMAGE_URL,
         )
 
     pokemons_on_page = []
     for pokemon in Pokemon.objects.all():
         pokemons_on_page.append({
             'pokemon_id': pokemon.id,
-            'img_url': request.build_absolute_uri(pokemon.image.url) if pokemon.image else DEFAULT_IMAGE_URL,
+            'img_url': request.build_absolute_uri(pokemon.image.url) if pokemon.image
+            else DEFAULT_IMAGE_URL,
             'title_ru': pokemon.title,
         })
 
@@ -65,7 +67,8 @@ def show_pokemon(request, pokemon_id):
         add_pokemon(
             folium_map, pokemon_entity.latitude,
             pokemon_entity.longitude,
-            request.build_absolute_uri(requested_pokemon.image.url),
+            request.build_absolute_uri(requested_pokemon.image.url) if requested_pokemon.image
+            else DEFAULT_IMAGE_URL,
         )
 
     pokemon = {
@@ -74,7 +77,8 @@ def show_pokemon(request, pokemon_id):
         "title_en": requested_pokemon.english_name,
         "title_jp": requested_pokemon.japanese_name,
         "description": requested_pokemon.description,
-        "img_url": request.build_absolute_uri(requested_pokemon.image.url),
+        "img_url": request.build_absolute_uri(requested_pokemon.image.url) if requested_pokemon.image
+        else DEFAULT_IMAGE_URL,
     }
     if requested_pokemon.evolves_from:
         previous_evolution = requested_pokemon.evolves_from
@@ -82,7 +86,8 @@ def show_pokemon(request, pokemon_id):
             "previous_evolution": {
                 "title_ru": previous_evolution.title,
                 "pokemon_id": previous_evolution.id,
-                "img_url": request.build_absolute_uri(previous_evolution.image.url)
+                "img_url": request.build_absolute_uri(previous_evolution.image.url) if previous_evolution.image
+                else DEFAULT_IMAGE_URL
             }
         })
     evolves_to = Pokemon.objects.filter(evolves_from=requested_pokemon)
@@ -92,7 +97,8 @@ def show_pokemon(request, pokemon_id):
             "next_evolution": {
                 "title_ru": next_evolution.title,
                 "pokemon_id": next_evolution.id,
-                "img_url": request.build_absolute_uri(next_evolution.image.url)
+                "img_url": request.build_absolute_uri(next_evolution.image.url) if next_evolution.image
+                else DEFAULT_IMAGE_URL
             }
         })
 
