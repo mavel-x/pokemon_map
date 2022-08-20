@@ -7,6 +7,10 @@ class Pokemon(models.Model):
     japanese_name = models.CharField(max_length=200, null=True, blank=True)
     english_name = models.CharField(max_length=200, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
+    evolves_from = models.ForeignKey('self', null=True, blank=True,
+                                     on_delete=models.SET_NULL, related_name='ancestors')
+    evolves_to = models.ForeignKey('self', null=True, blank=True,
+                                   on_delete=models.SET_NULL, related_name='descendants')
 
     def __str__(self):
         return self.title

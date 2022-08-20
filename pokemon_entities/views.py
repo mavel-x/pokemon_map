@@ -75,6 +75,22 @@ def show_pokemon(request, pokemon_id):
         "description": requested_pokemon.description,
         "img_url": request.build_absolute_uri(requested_pokemon.image.url),
     }
+    if requested_pokemon.evolves_from:
+        pokemon.update({
+            "previous_evolution": {
+                "title_ru": requested_pokemon.evolves_from.title,
+                "pokemon_id": requested_pokemon.evolves_from.id,
+                "img_url": request.build_absolute_uri(requested_pokemon.evolves_from.image.url)
+            }
+        })
+    if requested_pokemon.evolves_to:
+        pokemon.update({
+            "next_evolution": {
+                "title_ru": requested_pokemon.evolves_to.title,
+                "pokemon_id": requested_pokemon.evolves_to.id,
+                "img_url": request.build_absolute_uri(requested_pokemon.evolves_to.image.url),
+            }
+        })
 
     return render(request, 'pokemon.html', context={
         'map': folium_map._repr_html_(), 'pokemon': pokemon
