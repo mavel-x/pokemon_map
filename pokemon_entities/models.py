@@ -8,7 +8,7 @@ class Pokemon(models.Model):
     japanese_name = models.CharField('японское название', max_length=200, blank=True)
     english_name = models.CharField('английское название', max_length=200, blank=True)
     description = models.TextField('описание', blank=True)
-    evolves_from = models.ForeignKey('self', null=True, blank=True,
+    evolves_from = models.ForeignKey('self', null=True, blank=True, related_name='descendants',
                                      verbose_name='эволюционирует из', on_delete=models.SET_NULL)
 
     def __str__(self):
@@ -17,7 +17,8 @@ class Pokemon(models.Model):
 
 class PokemonEntity(models.Model):
     """Особь покемона, появляющаяся в мире."""
-    pokemon = models.ForeignKey(Pokemon, verbose_name='покемон', on_delete=models.CASCADE)
+    pokemon = models.ForeignKey(Pokemon, verbose_name='покемон',
+                                related_name='entities', on_delete=models.CASCADE)
     latitude = models.FloatField('широта')
     longitude = models.FloatField('долгота')
     appeared_at = models.DateTimeField('когда появился')
